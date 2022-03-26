@@ -330,8 +330,7 @@ const replies = [
    ]
 
 client.on('messageCreate', (message) =>{
-    if (message.channel.id == '957232728007389254' && message.content[0] === "!") {
-        // msg.reply('🚂🌈💖');
+    if (message.channel.id == 'ChannelID' && message.content[0] === "!") {
         //console.log(message);
         const index = Math.floor(Math.random() * replies.length);
         message.reply(replies[index]);
