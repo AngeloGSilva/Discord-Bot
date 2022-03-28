@@ -1,339 +1,99 @@
-// Require the necessary discord.js classes
-const Discord = require('discord.js');
+// Require the necessary for require and import to work in the same file
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+//importar variaveis do ficheiro (./config.json)
 const { token } = require('./config.json');
+const { keyOpenAi } = require('./config.json');
+const { IdChannel } = require('./config.json');
+
+
+// Require the necessary discord.js classes
+const { SelectMenuOption } = require('@discordjs/builders');
+const Discord = require('discord.js');
+
+// Require the necessary OpenAI classes
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: keyOpenAi,
+});
+const openai = new OpenAIApi(configuration);
 
 // Create a new client instance
 const client = new Discord.Client({ 
     intents:[
         "GUILDS",
         "GUILD_MESSAGES",
-    ]});
+    ]
+});
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
 	console.log('Ready!');
+    client.channels.cache.get(IdChannel).send('\n**ON**\nEntrei');   //mensagem de entrada
 });
 
 // Login to Discord with your client's token
 client.login(token);
 
-const replies = [
-    'Aldrabão',
-    'abécula',
-    'agarrado',
-    'analfabruto',
-    'atraso devida',
-    'apanhado do clima',
-    'azeiteiro',
-    'alcoviteira',
-    'aselha',
-    'asno',
-    'anjinho',
-    'asqueroso',
-    'arruaceiro',
-    'artolas',
-    'Badameco',
-    'bandido',
-    'bruto',
-    'besta quadrada',
-    'barrigudo',
-    'brutamontes',
-    'borra-botas',
-    'bufo',
-    'boca de xarroco',
-    'boi',
-    'basbaque',
-    'biltre',
-    'bexigoso',
-    'bichona',
-    'bêbedo',
-    'bebedolas',
-    'batoque',
-    'banana',
-    'bardajona',
-    'badalhoca',
-    'bisbilhoteira',
-    'bandalho',
-    'bota de elástico',
-    'baldas',
-    'brochista',
-    'boneca de trapos',
-    'beata',
-    'bronco',
-    'bexigoso',
-    'betinho',
-    'bárbaro',
-    'Cunanas',
-    'camelo',
-    'chalado',
-    'camafeu',
-    'cona de sabão',
-    'cara de cu àpaisana',
-    'coirão',
-    'choninhas',
-    'carroceiro',
-    'cabeçudo',
-    'cavalgadura',
-    'canalha',
-    'cretino',
-    'calhandreira',
-    'caga-tacos',
-    'cegueta',
-    'caixa de óculos',
-    'cornudo',
-    'coxo',
-    'candongueiro',
-    'careca',
-    'chupado das carochas',
-    'copinho de leite',
-    'cacique',
-    'calão',
-    'cabra',
-    'cabrão',
-    'cusca',
-    'coscuvilheira',
-    'cão',
-    'cabeça no ar',
-    'convencido',
-    'chanfrado',
-    'cagão',
-    'chato',
-    'cobardola',
-    'cavalona',
-    'chico-esperto',
-    'charlatão',
-    'caloteiro',
-    'cigano',
-    'comuna',
-    'carrancudo',
-    'corno',
-    'caceteiro',
-    'canalha',
-    'carapau de corrida',
-    'choné',
-    'cabeça de abóbora',
-    'Delambida',
-    'desenxabida',
-    'doido varrido',
-    'doidivanas',
-    'desmancha prazeres',
-    'desastrada',
-    'desengonçado',
-    'desaustinado',
-    'desbocado',
-    'Escanifobética',
-    'estafermo',
-    'embusteiro',
-    'estúpido',
-    'esqueleto vaidoso',
-    'engraxador',
-    'esgalgado',
-    'empecilho',
-    'estroina',
-    'escarumba',
-    'estouvada',
-    'estupor',
-    'espantalho',
-    'estapafúrdio',
-    'energúmeno',
-    'espalhafatoso',
-    'enjoado da trampa',
-   'Flausina',
-    'farsante',
-    'filho da puta',
-    'fufa',
-    'fersureira',
-    'falhado',
-    'foleiro',
-    'facínora',
-    'falsário',
-    'franganote',
-    'fanfarrão',
-    'fanático',
-    'fanchono',
-    'filho da mãe',
-    'Gatuno',
-    'gordalhufo',
-    'gabiru',
-    'galinha choca',
-    'galdéria',
-    'gabarola',
-    'gosma',
-    'gandulo',
-    'ganancioso',
-    'garganeira',
-    'Histérica',
-    'herege',
-    'Idiota',
-    'imbecil',
-    'incapaz',
-    'incompetente',
-    'inútil',
-    'Javardo',
-    'judeu,Lambisgóia',
-    'ladrão',
-    'lavajão',
-    'lambéconas',
-    'lambe-botas',
-    'lingrinhas',
-    'larápio',
-    'larilas',
-    'labrego',
-    'louco',
-    'lorpa',
-    'lunático',
-    'Morcão',
-    'malacueco',
-    'maluco',
-    'mariquinhas pé-de-salsa',
-    'meliante',
-    'mentiroso',
-    'malandro',
-    'malandreco',
-    'malandrim',
-    'marreco',
-    'maneta',
-    'mouco',
-    'mariconço',
-    'maricas',
-    'menino da mamã',
-    'mastronço',
-    'mostrengo',
-    'moina',
-    'meia-leca',
-    'medroso',
-    'monhé',
-    'molengão',
-    'mafioso',
-    'medricas',
-    'masoquista',
-    'mineteiro',
-    'maltrapilho',
-    'maria-vai-com-as-outras',
-    'miserável',
-    'magricela',
-    'mula',
-    'mal enjorcado',
-    'mimado',
-    'Nódoa',
-    'nulidade',
-    'nabo',
-    'nojento',
-    'não-tens-onde-cair-morto',
-    'nababo',
-    'Otário',
-    'olhos de carneiro mal morto',
-    'orelhas de abano',
-    'obcecado',
-    'ordinário',
-    'obstinado',
-    'Palerma',
-    'parvalhão',
-    'pateta',
-    'parvo',
-    'porcalhão',
-    'piroso',
-    'pirata',
-    'piolhoso',
-    'peida-gadoxa',
-    'pantomineiro',
-    'pote de banhas',
-    'pernas de alicate',
-    'pelintra',
-    'patego',
-    'panasca',
-    'paneleiro',
-    'putéfia',
-    'puta',
-    'panilas',
-    'pés de chumbo',
-    'patife',
-    'perliquiteques',
-    'palhaço',
-    'palhaçote',
-    'porco',
-    'punheteiro',
-    'preguiçoso',
-    'pacóvio',
-    'pobre de espírito',
-    'proxeneta',
-    'patinho feio',
-    'panhonhas',
-    'pintor',
-    'parasita',
-    'presunçoso',
-    'palonça',
-    'peneirenta',
-    'pobre diabo',
-    'Quadrilheira',
-    'queixinhas',
-    'quatro-olhos',
-    'Ranhoso',
-    'reles',
-    'rasca',
-    'rameira',
-    'rabeta',
-    'rafeiro',
-    'reaccionário',
-    'reaças',
-    'raquítico',
-    'Salafrário',
-    'safardana',
-    'sevandija',
-    'sacripanta',
-    'sacrista',
-    'sacana',
-    'sovina',
-    'somítico',
-    'safado',
-    'sabujo',
-    'saloio',
-    'soba',
-    'sebento',
-    'sapatona',
-    'sádico',
-    'serigaita',
-    'sarnento',
-    'snob',
-    'Tarado',
-    'trombalazanas',
-    'trapaceiro',
-    'trabeculoso',
-    'tísico',
-    'trombudo',
-    'trauliteiro',
-    'tinhoso',
-    'trique-lariques',
-    'tosco',
-    'totó',
-    'trombeiro',
-    'trouxa',
-    'tonto',
-    'traste',
-    'trinca-espinhas',
-    'troca-tintas,Unhas de fome',
-    'urso',
-    'Vaca gorda',
-    'vigarista',
-    'vândalo',
-    'vígaro',
-    'vigarista',
-    'velhaco',
-    'vendido',
-    'vagabundo',
-    'vira-casacas',
-    'vaidoso',
-    'Xé-xé',
-    'Zero à esquerda',
-    'zarolho',
-    'Zé-ninguém'
-   ]
+//funcao OpenAi classification
+const classificar = async (classifica) =>{
+const response = await openai.createClassification({
+    search_model: "ada",
+    model: "curie",
+    examples: [
+      ["A happy moment", "Happy"],
+      ["I am sad.", "Sad"],
+      ["I am feeling awesome", "Happy"]
+    ],
+    query: classifica,
+    labels: ["Happy", "Sad", "Meh"],
+  });
+  console.log(response.data.label);
+  return response.data.label;
+}
 
-client.on('messageCreate', (message) =>{
-    if (message.channel.id == 'ChannelID' && message.content[0] === "!") {
-        //console.log(message);
-        const index = Math.floor(Math.random() * replies.length);
-        message.reply(replies[index]);
+//funcao OpenAi completion
+const completar = async (conteudo) =>{
+    const response = await openai.createCompletion("text-davinci-002", {
+        prompt: conteudo,
+        temperature: 0.8,
+        max_tokens: 150,
+        top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
+      });
+    //console.log(response.data.choices[0].text);
+    return response.data;
+}
+
+//evento de mensagem criada
+client.on('messageCreate', async (message) =>{
+    if (message.channel.id == IdChannel) {
+        if(message.content[0]==='!'){   //caso seja ! completa "tem conversa"
+            console.log(message.content);
+            const resposta = completar(message.content);
+            console.log((await resposta).choices[0].text);
+            message.reply((await resposta).choices[0].text);
+        }else if(message.content[0]==='?'){ //caso seja ? classifica a mensagem
+            console.log(message.content);
+            const resposta = classificar(message.content);
+            //console.log((await resposta));
+            message.reply((await resposta));
+        }else if(message.content === 'leave discord'){  //mensagem para desligar bot
+            client.channels.cache.get(IdChannel).send('\n**OFF**\nBem parece que tenho de ir');  //mensagem de saida
+            setTimeout(() => {
+            console.log('Terminar');
+            process.exit(0), 1000})
+        }
     }
+})
+
+// Tratar do ctrl + c
+process.on('SIGINT', function(){
+    client.channels.cache.get(IdChannel).send('\n**OFF**\nBem parece que tenho de ir');  //mensagem de saida
+    setTimeout(() => {  //equivalente do sleep()
+    console.log('Terminar');
+    process.exit(0), 1000})
 })
 

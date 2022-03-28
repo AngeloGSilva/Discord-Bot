@@ -1,5 +1,7 @@
 {
-    "clientId": "YourID",
-	"guildId": "DiscordID",
-	"token": "token"
+    "clientId": "ID_DO_USER_DISCORD",
+	"guildId": "SERVER_ID",
+	"token": "TOKEN_DO_BOT",
+	"keyOpenAi": "API_KEY_DO_OPENAI",
+	"IdChannel": "ID_DO_CHANNEL_ONDE_BOT_RESPONDE"
 }
